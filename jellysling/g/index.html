@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>JellySling</title>
+<link rel="icon" href="icon.png" />
+<style>
+@font-face{font-family:'Fredoka';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/Fredoka-500.woff2) format('woff2');}
+@font-face{font-family:'Fredoka';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/Fredoka-600.woff2) format('woff2');}
+@font-face{font-family:'Fredoka';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/Fredoka-700.woff2) format('woff2');}
+</style>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<style>#dkSplash{position:fixed;inset:0;z-index:2147483600;background:#101A2E center/cover no-repeat;background-image:url(_splash.jpg);transition:opacity .55s ease}#dkSplash.gone{opacity:0;pointer-events:none}</style><div id="dkSplash"></div><script>(function(){var s=document.getElementById("dkSplash"),t0=Date.now();function go(){var w=Math.max(0,1500-(Date.now()-t0));setTimeout(function(){s.classList.add("gone");setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},700);},w);}if(document.readyState==="complete")go();else window.addEventListener("load",go);})();</script>
+<canvas id="cv"></canvas>
+
+<div id="hud">
+  <div id="height">0 m</div>
+  <div id="right"><div id="candy">⭐ 0</div></div>
+  <div id="combo"></div>
+</div>
+
+<div id="startScreen" class="overlay">
+  <div class="ttl"><div class="logo">Jelly<span>Sling</span></div>
+  <div class="sub" data-i18n="sub">🍬 당겼다 놓아 위로 위로!</div></div>
+  <div class="cta"><div id="bestRow" class="bestRow" style="display:none">BEST <b id="bestT">0</b> m</div>
+  <button id="startBtn" class="jbtn">▶ START</button>
+  <div class="tip"><span class="ph" data-i18n="tip1">젤리를 끌어당겼다 놓기</span> · <span class="ph" data-i18n="tip2">펙에 찰싹 붙으며 더 높이</span></div></div>
+</div>
+
+<div id="overScreen" class="overlay" style="display:none">
+  <div class="over-title">SPLAT!</div>
+  <div class="stat"><span id="finalH">0</span> m</div>
+  <div class="stat small">⭐ <span id="finalC">0</span> · BEST <span id="bestH">0</span> m · <span data-i18n="combo">콤보</span> <span id="bestCombo">0</span></div>
+  <button id="retryBtn" class="jbtn" data-i18n="retry">↻ 다시</button>
+</div>
+
+<script src="i18n.js"></script>
+<script src="monetize.js"></script>
+<script src="game.js"></script>
+<script src="bgm.js"></script>
+</body>
+</html>
