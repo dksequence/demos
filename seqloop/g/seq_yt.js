@@ -6,7 +6,7 @@
   window.seqYT = {
     container: function () {
       var el = document.createElement('div');
-      el.style.cssText = 'width:100%;height:100%;background:#000;position:relative;overflow:hidden';
+      el.style.cssText = 'width:100%;height:100%;background:#000;position:relative;overflow:hidden;pointer-events:none';
       var inner = document.createElement('div');
       inner.id = 'seqloop-yt-inner';
       el.appendChild(inner);
