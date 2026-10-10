@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>스타터 건: 리액션 서바이벌 (Starter Gun: Reaction Survival)</title>
+    <meta name="description" content="0.001초의 한계에 도전하라! 속임수 섬광과 가짜 신호음을 극복하는 극한의 순발력 아케이드 게임">
+    <meta name="robots" content="noindex">
+    <script src="demo-stub.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts 탑재 -->
+    <style>
+    @font-face{font-family:'Outfit';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/Outfit-300.woff2) format('woff2');}
+    @font-face{font-family:'Outfit';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/Outfit-400.woff2) format('woff2');}
+    @font-face{font-family:'Outfit';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/Outfit-700.woff2) format('woff2');}
+    @font-face{font-family:'Outfit';font-style:normal;font-weight:900;font-display:swap;src:url(fonts/Outfit-900.woff2) format('woff2');}
+    </style>
+</head>
+<body>
+<style>#dkSplash{position:fixed;inset:0;z-index:2147483600;background:#1A0E12 center/cover no-repeat;background-image:url(_splash.jpg);transition:opacity .55s ease}#dkSplash.gone{opacity:0;pointer-events:none}</style><div id="dkSplash"></div><script>(function(){var s=document.getElementById("dkSplash"),t0=Date.now();function go(){var w=Math.max(0,1500-(Date.now()-t0));setTimeout(function(){s.classList.add("gone");setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},700);},w);}if(document.readyState==="complete")go();else window.addEventListener("load",go);})();</script>
+    <div id="app-container" class="cyberpunk-theme">
+        <!-- 1. 메인 메뉴 화면 -->
+        <section id="screen-menu" class="screen active">
+            <div class="hero-art" aria-hidden="true"></div>
+            <div class="logo-area">
+                <h1 class="glitch-text" data-text="STARTER GUN">STARTER GUN</h1>
+                <p class="subtitle">REACTION SURVIVAL</p>
+            </div>
+
+            <div class="menu-card">
+                <div class="stats-preview">
+                    <span>최고 기록</span>
+                    <span id="best-score-display">0 Stage</span>
+                </div>
+                <div class="stats-preview">
+                    <span>최고 반응속도</span>
+                    <span id="best-time-display">0.000s</span>
+                </div>
+            </div>
+
+            <div class="menu-actions">
+                <button id="btn-start" class="btn btn-primary btn-glow">서바이벌 시작</button>
+                <button id="btn-info-modal" class="btn btn-secondary">게임 규칙</button>
+            </div>
+        </section>
+
+        <!-- 2. 게임 플레이 화면 -->
+        <section id="screen-game" class="screen">
+            <!-- 상태 탑바 -->
+            <div class="game-header">
+                <div class="stage-badge">STAGE <span id="current-stage">1</span></div>
+                <div class="lives-container" id="lives-box">
+                    <span class="life-heart">❤️</span>
+                    <span class="life-heart">❤️</span>
+                    <span class="life-heart">❤️</span>
+                </div>
+            </div>
+
+            <!-- 메인 게임 영역 (사격 타겟 및 상태 연출) -->
+            <div id="shooting-range">
+                <div class="range-art" aria-hidden="true"></div>
+                <div id="flash-overlay"></div>
+                <!-- 권총 SVG 오브젝트 -->
+                <div id="gun-model" class="gun-idle">
+                    <img class="gun-img" src="gun_starter.webp" alt="" draggable="false">
+                    <!-- 해머 요소는 app.js 가 참조하므로 남겨 두고 화면에서는 숨김(그림은 위 gun-img) -->
+                    <svg viewBox="0 0 100 100" width="160" height="160" id="gun-svg" aria-hidden="true">
+                        <!-- 배럴 (Barrel) -->
+                        <path d="M40 30 h35 v12 h-35 z" fill="#4B5563" />
+                        <!-- 실린더 (Cylinder) -->
+                        <rect x="25" y="32" width="18" height="15" rx="3" fill="#374151" stroke="#9CA3AF" stroke-width="1.5" />
+                        <!-- 그립 (Grip) -->
+                        <path d="M25 45 l-10 25 h12 l8 -25 z" fill="#1F2937" />
+                        <!-- 해머 (Hammer) -->
+                        <path d="M22 28 q-4 -3 -2 -8 q3 1 2 6 z" fill="#9CA3AF" id="gun-hammer" />
+                        <!-- 방아쇠 (Trigger) -->
+                        <path d="M30 47 q3 3 5 0 q0 -4 -5 0 z" fill="#D1D5DB" />
+                    </svg>
+                </div>
+                <!-- 상태 메세지 보드 -->
+                <div id="status-board">
+                    <h2 id="signal-message">터치 영역을 꾹 누르세요</h2>
+                    <p id="sub-message">손가락을 떼면 반응속도가 측정됩니다</p>
+                </div>
+            </div>
+
+            <!-- 터치 패드 (하단 트리거 영역) -->
+            <div id="touch-pad-container">
+                <button id="touch-pad" class="touch-pad-idle" type="button">
+                    <div class="pad-ripple"></div>
+                    <span id="pad-label">PRESS & HOLD</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. 결과 모달 / 스크린 -->
+        <section id="screen-result" class="screen">
+            <div class="result-card glassmorphism">
+                <h2 id="result-title" class="text-glow-red">GAME OVER</h2>
+                <div class="result-stats">
+                    <div class="stat-row">
+                        <span>도달 스테이지</span>
+                        <span id="final-stage" class="value">0 Stage</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>평균 반응속도</span>
+                        <span id="average-time" class="value">0.000s</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>실격(Foul) 횟수</span>
+                        <span id="foul-count" class="value">0회</span>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button id="btn-restart" class="btn btn-primary btn-glow">다시 도전</button>
+                    <button id="btn-home" class="btn btn-secondary">메인으로</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 게임 설명 모달 -->
+        <div id="rules-modal" class="modal-overlay">
+            <div class="modal-content glassmorphism">
+                <h2>🔫 스타터 건 규칙 가이드</h2>
+                <div class="modal-body">
+                    <p><strong>1. 준비 (Ready & Set)</strong><br>하단의 파란 터치 패드를 꾹 누르고 계세요. "제자리에", "차렷" 신호음이 나옵니다.</p>
+                    <p><strong>2. 발포 (Bang!)</strong><br>총소리와 함께 붉은 섬광이 번쩍이는 순간 <strong>최대한 빠르게 손가락을 떼세요.</strong></p>
+                    <p><strong>3. 속임수 주의 (Fake Trigger)</strong><br>스테이지가 올라갈수록 다른 색의 빛이 번쩍이거나, "탁!", "똑!" 하는 가짜 효과음이 들립니다. 가짜에 반응해 손가락을 떼면 <strong>부정출발(Foul)</strong>로 라이프가 즉시 차감됩니다.</p>
+                    <p><strong>4. 통과 기준</strong><br>각 스테이지마다 통과해야 하는 제한 시간(예: 0.35초 이내)이 존재합니다.</p>
+                </div>
+                <button id="btn-close-modal" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 스크립트 로드 -->
+    <script src="app.js"></script>
+
+<script src="bgm.js"></script>
+<script src="i18n_inject.js"></script>
+
+</body>
+</html>
